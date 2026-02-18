@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دەفتەری قەرز IQD</title>
+
+<style>
+body{
+  background: linear-gradient(135deg,#00e41e,#18ff10);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  font-family:sans-serif;
+}
+
+.container{
+  width:95%;
+  max-width:900px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(15px);
+  padding:25px;
+  border-radius:20px;
+}
+
+.form{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+input, select{
+  padding:10px;
+  border:none;
+  border-radius:10px;
+}
+
+button{
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  background:#00c9a7;
+  color:white;
+}
+
+.card{
+  background:rgba(255,255,255,0.2);
+  padding:10px;
+  margin-top:10px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.total{
+  margin-top:15px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>سەنتەری محەمەد دەفتەر قەرز</h1>
+
+  <div class="form">
+    <input type="text" id="name" placeholder="ناو">
+    <input type="number" id="amount" placeholder="دینار">
+    <input type="date" id="date">
+    <select id="group">
+      <option value="گروپی 1">گروپی 1</option>
+      <option value="گروپی 2">گروپی 2</option>
+       <option value="گروپی 3">گروپی 3</option>
+    </select>
+    <button onclick="addPerson()">زیادکردن</button>
+  </div>
+
+  <input type="text" id="search" placeholder="گەڕان..." onkeyup="searchPerson()">
+
+  <div id="list"></div>
+  <div class="total" id="total">کۆی گشتی: 0 </div>
+</div>
+
+<script>
+let people = [];
+
+function addPerson(){
+  const name = document.getElementById("name").value;
+  const amount = parseFloat(document.getElementById("amount").value);
+  const group = document.getElementById("group").value;
+  const date = document.getElementById("date").value;
+
+  if(name && amount && date){
+    people.push({name,amount,group,date});
+    display();
+    document.getElementById("name").value="";
+    document.getElementById("amount").value="";
+    document.getElementById("date").value="";
+  }
+}
+
+function display(listData = people){
+  const list = document.getElementById("list");
+  list.innerHTML="";
+  let total=0;
+
+  listData.forEach((p,index)=>{
+    total+=p.amount;
+    list.innerHTML+=`
+      <div class="card">
+        <span>
+          ${p.name} | 
+          ${p.amount.toLocaleString()} IQD | 
+          ${p.group} | 
+          ${p.date}
+        </span>
+        <button onclick="removePerson(${index})">X</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("total").innerText=
+    "کۆی گشتی: "+total.toLocaleString()+" IQD";
+}
+
+function removePerson(index){
+  people.splice(index,1);
+  display();
+}
+
+function searchPerson(){
+  const value=document.getElementById("search").value.toLowerCase();
+  const filtered=people.filter(p=>p.name.toLowerCase().includes(value));
+  display(filtered);
+}
+</script>
+
+</body>
+</html>
+
